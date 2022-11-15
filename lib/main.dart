@@ -1,4 +1,6 @@
+import 'package:cubit_app/counter_cubit.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 void main() {
   runApp(const MyCubitApp());
@@ -11,7 +13,10 @@ class MyCubitApp extends StatelessWidget {
     // TODO: implement build
     return MaterialApp(
       title: 'Cubit Application',
-      home: CubitView(),
+      home: BlocProvider(
+        create: (_) => CounterCubit(),
+        child: CubitView(),
+      ),
     );
   }
 
@@ -36,10 +41,15 @@ class CubitViewState extends State<CubitView>{
       appBar: AppBar(
         title: Text('Cubit App'),
       ),
-      body: Center(
-        child: Text(
-          'Hello Cubit App'
-        ),
+      body: BlocBuilder<CounterCubit, int>(
+        builder: (BuildContext context, state) {
+          return Center(
+            child: Text(
+              'Count is $state'
+            ),
+          );
+        },
+
       ),
 
       floatingActionButton: Container(
@@ -48,11 +58,11 @@ class CubitViewState extends State<CubitView>{
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             FloatingActionButton(
-              onPressed: () => print('hi'),
+              onPressed: () => context.read<CounterCubit>().increment(),
               child: const Icon(Icons.add),
             ),
             FloatingActionButton(
-              onPressed: () => print('hi'),
+              onPressed: () => context.read<CounterCubit>().decrement(),
               child: const Icon(Icons.remove),
             )
 
